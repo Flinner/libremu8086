@@ -3,6 +3,9 @@ project(libremu8086 CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# generate compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
 include(FetchContent)
 FetchContent_Declare(
   googletest
