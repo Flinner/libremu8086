@@ -6,10 +6,15 @@ web.
 
 ## Installation
 ## Compile
-`conan` and `Cmake` are required to build this project.
+`Cmake` is required to build this project.
 
 ```bash
-conan build conanfile.py
+$ cmake -S . -B build && cmake --build build
+```
+## Test
+```
+cd build/
+make test
 ```
 
 ## TODO
