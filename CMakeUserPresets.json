@@ -1,9 +1,0 @@
-{
-    "version": 4,
-    "vendor": {
-        "conan": {}
-    },
-    "include": [
-        "/home/lambda/code/cpp/libremu8086/build/Release/generators/CMakePresets.json"
-    ]
-}
