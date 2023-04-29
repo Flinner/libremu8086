@@ -20,16 +20,24 @@ enable_testing()
 include(CTest)
 add_executable(
         ${PROJECT_NAME}_test
-        tests/hello.cpp
+        #tests/opcodes.cpp
+        tests/decode.cpp
+        #tests/hello.cpp
 )
-target_link_libraries(${PROJECT_NAME}_test GTest::gtest_main)
+target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME}_lib GTest::gtest_main)
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}_test)
 
 
 add_executable(
         libremu8086
-        src/libremu8086.cpp
         src/main.cpp
+        src/libremu8086.cpp
 )
 
+add_library(
+        libremu8086_lib STATIC
+        src/disassembler/decode.cpp
+        src/CPU.h
+)
+target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_lib)
