@@ -1,18 +1,6 @@
 #pragma once
 #include "../types.h"
 
-// a queue is of size 6 bytes
-extern u8 queue[6];
-
-// Instruction Type
-enum class IType {
-  // 8 bit Register-Register
-  R8R,
-  // 16 bit Register-Register
-  R16R,
-
-};
-
 // clang-format off
 #define OPCODE_MASK    0xFC   // 0b1111'1100
 #define DIRECTION_MASK 0x02   // 0b0000'0010
@@ -50,6 +38,9 @@ const R REG_MAP[2][8] = {
         R::SI, // REG =  110  // 6
         R::DI, // REG =  111  // 7
     }};
+
+using MEM =
+    std::tuple<std::optional<R>, std::optional<R>, std::optional<i8ori16>>;
 
 /**
  * FORMAT: [MOD][REG_M]
@@ -123,7 +114,6 @@ public:
   virtual std::string print() const { return ""; };
 
   OP op;
-  IType type;
   union {
     R reg_desintaion;
     u8 reg_memory;

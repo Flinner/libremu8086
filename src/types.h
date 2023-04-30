@@ -16,9 +16,6 @@ using i16 = int16_t;
 using i8 = int8_t;
 using i8ori16 = std::variant<i8, i16>;
 
-using MEM =
-    std::tuple<std::optional<R>, std::optional<R>, std::optional<i8ori16>>;
-
 // clang-format off
 enum class R {
   AX, AH, AL,
