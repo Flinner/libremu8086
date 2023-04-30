@@ -3,7 +3,9 @@
 #include <cstdint>
 #include <iostream>
 #include <optional>
+#include <tuple>
 #include <variant>
+
 using std::nullopt;
 
 enum class R;
