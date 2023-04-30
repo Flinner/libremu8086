@@ -41,6 +41,7 @@ const R REG_MAP[2][8] = {
 
 using MEM =
     std::tuple<std::optional<R>, std::optional<R>, std::optional<i8ori16>>;
+using REG_M = std::variant<R, MEM>;
 
 /**
  * FORMAT: [MOD][REG_M]
@@ -114,14 +115,12 @@ public:
   virtual std::string print() const { return ""; };
 
   OP op;
-  union {
-    R reg_desintaion;
-    u8 reg_memory;
-  };
-  union {
-    R reg_source;
-    u8 mem_source;
-  };
+  R reg;
+  REG_M r_m;
+
+  // direction = 0; from `reg` to `r_m`
+  // direction = 1; From `r_m` to `reg`
+  bool direction;
 };
 
 Instruction decode(u8 b1, u8 b2 = 0, u8 b3 = 0, u8 b4 = 0, u8 b5 = 0,
