@@ -15,29 +15,33 @@
 // clang-format on
 
 /**
- * FORMAT: 0bABCD
- *  - BIT    A: W bit
- *  - BITs BCD: Reg code
+ * FORMAT: [W][REG]
+ *  - W       : Width bit, 0 = 8 bits, 1 = 16
+ *  - REG     : REG code
  */
-R REG_MAP[] = {
-    R::AL, // 0 000  // 0
-    R::CL, // 0 001  // 1
-    R::DL, // 0 010  // 2
-    R::BL, // 0 011  // 3
-    R::AH, // 0 100  // 4
-    R::CH, // 0 101  // 5
-    R::DH, // 0 110  // 6
-    R::BH, // 0 111  // 7
-
-    R::AX, // 1 000  // 8
-    R::CX, // 1 001  // 9
-    R::DX, // 1 010  // A
-    R::BX, // 1 011  // B
-    R::SP, // 1 100  // C
-    R::BP, // 1 101  // D
-    R::SI, // 1 110  // E
-    R::DI, // 1 111  // F
-};
+R REG_MAP[2][8] = {
+    // W = 0
+    {
+        R::AL, // REG = 000  // 0
+        R::CL, // REG = 001  // 1
+        R::DL, // REG = 010  // 2
+        R::BL, // REG = 011  // 3
+        R::AH, // REG = 100  // 4
+        R::CH, // REG = 101  // 5
+        R::DH, // REG = 110  // 6
+        R::BH, // REG = 111  // 7
+    },
+    // W = 1
+    {
+        R::AX, // REG =  000  // 0
+        R::CX, // REG =  001  // 1
+        R::DX, // REG =  010  // 2
+        R::BX, // REG =  011  // 3
+        R::SP, // REG =  100  // 4
+        R::BP, // REG =  101  // 5
+        R::SI, // REG =  110  // 6
+        R::DI, // REG =  111  // 7
+    }};
 
 /**
  * FORMAT: [MOD][REG_M]
@@ -59,18 +63,20 @@ MEM M_MAP[4][8] = {
     },
 
     // MOD = 01
+    // 8 bit displacement
     {
-        {R::BX, R::SI, (i8)0},    // 000
-        {R::BX, R::DI, (i8)0},    // 001
-        {R::BP, R::SI, (i8)0},    // 010
-        {R::BP, R::DI, (i8)0},    // 011
-        {nullopt, R::SI, (i8)0},  // 100
-        {nullopt, R::DI, (i8)0},  // 101
-        {nullopt, R::BP, (i16)0}, // 110
-        {R::BX, nullopt, (i8)0},  // 111
+        {R::BX, R::SI, (i8)0},   // 000
+        {R::BX, R::DI, (i8)0},   // 001
+        {R::BP, R::SI, (i8)0},   // 010
+        {R::BP, R::DI, (i8)0},   // 011
+        {nullopt, R::SI, (i8)0}, // 100
+        {nullopt, R::DI, (i8)0}, // 101
+        {nullopt, R::BP, (i8)0}, // 110
+        {R::BX, nullopt, (i8)0}, // 111
     },
 
     // MOD = 10
+    // 16 bit displacement
     {
         {R::BX, R::SI, (i16)0},   // 000
         {R::BX, R::DI, (i16)0},   // 001
@@ -91,7 +97,7 @@ std::variant<R, MEM> decode_R_M(u8 MOD, u8 R_M, bool W, i8 disp_lower,
                                 i8 disp_upper) {
   // Decode if it is a register first.
   if (MOD == 0b11) {
-    return REG_MAP[(W << 3) + R_M];
+    return REG_MAP[W][R_M];
 
   } else { // it is a Memory address
     auto m = M_MAP[MOD][R_M];
@@ -121,7 +127,7 @@ void ADD(Instruction &inst, bool D, bool W, u8 REG, u8 MOD, u8 REG_M) {
 }
 
 void source_desintation(bool D, bool W, u8 REG, u8 MOD, u8 REG_M) {
-  R _REG = REG_MAP[(W << 3) + REG];
+  R _REG = REG_MAP[W][REG];
 }
 
 Instruction decode(u8 queue[6]) {
